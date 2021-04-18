@@ -1,0 +1,90 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/services"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:background="@android:color/darker_gray"
+            android:gravity="center"
+            android:text="الخدمات المقدمة"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="4dp"
+            android:onClick="mainFeatures"
+            android:text="إطلالات رائعة" />
+
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="4dp"
+            android:onClick="mainFeatures"
+            android:text="ألعاب رياضية" />
+
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="4dp"
+            android:onClick="mainFeatures"
+            android:text="أماكن جلوس على السطح" />
+
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="4dp"
+            android:onClick="mainFeatures"
+            android:text="حلويات رائعة" />
+
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="4dp"
+            android:onClick="mainFeatures"
+            android:text="خدمة سريعة" />
+
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="4dp"
+            android:onClick="mainFeatures"
+            android:text="قهوة رائعة" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="4dp"
+            android:onClick="mainFeatures"
+            android:text="مشروبات رائعة" />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="4dp"
+            android:onClick="mainFeatures"
+            android:text="موسيقى" />
+
+    </LinearLayout>
+</merge>

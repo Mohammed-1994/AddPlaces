@@ -1,0 +1,75 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/service_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:background="@android:color/darker_gray"
+            android:gravity="center"
+            android:text="خيارات الخدمة"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="4dp"
+            android:onClick="serviceOptionsClicked"
+            android:text="الايصال الى السيارة" />
+
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="4dp"
+            android:onClick="serviceOptionsClicked"
+            android:text="خدمة التوصيل" />
+
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="4dp"
+            android:onClick="serviceOptionsClicked"
+            android:text="خدمة الطلب أثناء القيادة" />
+
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="4dp"
+            android:onClick="serviceOptionsClicked"
+            android:text="طعام سفري" />
+
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="4dp"
+            android:onClick="serviceOptionsClicked"
+            android:text="الأكل داخل المكان" />
+
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_margin="4dp"
+            android:onClick="serviceOptionsClicked"
+            android:text="أماكن جلوس في الهواء الطلق" />
+
+    </LinearLayout>
+</merge>
