@@ -1,13 +1,17 @@
 package com.awad.addplaces
 
 import android.Manifest
-import android.R.attr
+import android.R.id
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import android.view.View.GONE
 import android.widget.CheckBox
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -15,12 +19,13 @@ import androidx.core.content.ContextCompat
 import com.awad.addplaces.databinding.ActivityMainBinding
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.File
-import java.net.URI
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 private const val TAG = "MainActivity myTag"
@@ -39,6 +44,22 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
     private var serviceOptions = ArrayList<String>()
     private var healthAndSafety = ArrayList<String>()
     private var mainFeatures = ArrayList<String>()
+    private var accessibility = ArrayList<String>()
+    private var eatOptions = ArrayList<String>()
+    private var services = ArrayList<String>()
+    private var payment = ArrayList<String>()
+    private var amenities = ArrayList<String>()
+    private var thePublic = ArrayList<String>()
+    private var atmosphere = ArrayList<String>()
+    private var planning = ArrayList<String>()
+
+    var name: String? = null
+    var description: String? = null
+    var location: String? = null
+    var address: String? = null
+    var phone: String? = null
+    var city: String? = null
+    var type: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,13 +67,43 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
         setContentView(binding.root)
 
         binding.saveButton.setOnClickListener {
+            getInputs()
+            val lat = location?.substring(0, location!!.indexOf(','))!!
+            val lon = location?.substring(location!!.indexOf(',') + 1, location!!.length - 1)!!
 
+            val geoPoint = GeoPoint(lat.toDouble(), lon.toDouble())
+
+            startActivity(intent)
+
+            binding.progressBar.visibility = View.VISIBLE
+
+            val mainInfo = hashMapOf(
+                "name" to name,
+                "description" to description,
+                "location" to geoPoint,
+                "address" to address,
+                "phone" to phone,
+                "city" to city,
+                "type" to type,
+            )
             val info = hashMapOf(
-                "serviceOptions" to serviceOptions,
+
+                "main info" to mainInfo,
+                "service options" to serviceOptions,
+                "main features" to mainFeatures,
+                "accessibility" to accessibility,
+                "eat options" to eatOptions,
+                "services" to services,
+                "payment" to payment,
+                "amenities" to amenities,
+                "public" to thePublic,
+                "atmosphere" to atmosphere,
+                "planning" to planning,
                 "healthAndSafety" to healthAndSafety
+
             )
 
-            fireStore.collection("cities").document("Rafah").collection("res")
+            fireStore.collection("cities").document(city!!).collection(type!!)
                 .add(info)
                 .addOnCompleteListener {
                     if (it.isSuccessful)
@@ -72,6 +123,19 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), RESULT_IMAGE)
 
         }
+
+
+    }
+
+
+    private fun getInputs() {
+        name = binding.details.nameEditText.text.toString()
+        description = binding.details.descriptionEditText.text.toString()
+        location = binding.details.locationEditText.text.toString()
+        address = binding.details.addressEditText.text.toString()
+        phone = binding.details.phoneEditText.text.toString()
+        city = binding.details.cityEditText.text.toString()
+        type = binding.details.typeEditText.text.toString()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -86,7 +150,7 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
                 (0 until totalItems).forEach { i ->
                     Log.d(TAG, "onActivityResult: foreach")
                     val imageUri = data.clipData!!.getItemAt(i).uri
-//                    uploadImage(imageUri)
+                    uploadImage(imageUri)
 
                 }
 
@@ -163,16 +227,41 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
     }
 
     override fun reaRef(ref: DocumentReference?) {
-        Log.d(TAG, "reaRef: ${ref?.id}")
-        ref?.get()?.addOnCompleteListener {
-            if (it.isSuccessful) {
-                var serviceOptions = it.result?.get("serviceOptions") as ArrayList<*>
-                Log.d(TAG, "reaRef: size = ${serviceOptions.size}")
-                Log.d(TAG, "reaRef: $serviceOptions")
-            } else
-                Log.e(TAG, "reaRef: Error", it.exception)
-        }
+
+        val metadata = hashMapOf(
+            "city" to city,
+            "type" to type
+        )
+
+        ref!!.collection("meta data")
+            .add(metadata)
+            .addOnCompleteListener {
+                binding.progressBar.visibility = GONE
+                if (!it.isSuccessful)
+                    Log.e(TAG, "reaRef: Error", it.exception)
+                else
+                    getLocation(ref)
+            }
     }
+
+    override fun getLocation(ref: DocumentReference?) {
+        ref!!.get()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val mainInfo: HashMap<*, *> = it.result.get("main info") as HashMap<*, *>
+
+                    val locationGeoPoint = mainInfo["location"] as GeoPoint
+                    val intent = Intent(this, MapsActivity::class.java)
+                    intent.putExtra("lat", locationGeoPoint.latitude)
+                    intent.putExtra("lon", locationGeoPoint.longitude)
+
+                    startActivity(intent)
+                } else
+                    Log.e(TAG, "getLocation: Error", it.exception)
+
+            }
+    }
+
 
     private fun checkForPermissions() {
         val permissions =
@@ -204,9 +293,88 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
             )
         }
     }
+
+    fun services(view: View) {
+        view as CheckBox
+        val text = view.text
+        if (services.contains(text.toString()))
+            services.remove(text.toString())
+        else
+            services.add(text.toString())
+    }
+
+    fun accessibilityClicked(view: View) {
+        view as CheckBox
+        val text = view.text
+        if (accessibility.contains(text.toString()))
+            accessibility.remove(text.toString())
+        else
+            accessibility.add(text.toString())
+    }
+
+    fun eatOptionsClicked(view: View) {
+        view as CheckBox
+        val text = view.text
+
+        if (eatOptions.contains(text.toString()))
+            eatOptions.remove(text.toString())
+        else
+            eatOptions.add(text.toString())
+
+
+
+    }
+
+
+
+    fun amenitiesClicked(view: View) {
+        view as CheckBox
+        val text = view.text
+        if (amenities.contains(text.toString()))
+            amenities.remove(text.toString())
+        else
+            amenities.add(text.toString())
+    }
+
+    fun atmosphereClicked(view: View) {
+        view as CheckBox
+        val text = view.text
+        if (atmosphere.contains(text.toString()))
+            atmosphere.remove(text.toString())
+        else
+            atmosphere.add(text.toString())
+    }
+
+    fun thePublicClicked(view: View) {
+        view as CheckBox
+        val text = view.text
+        if (thePublic.contains(text.toString()))
+            thePublic.remove(text.toString())
+        else
+            thePublic.add(text.toString())
+    }
+
+    fun planningClicked(view: View) {
+        view as CheckBox
+        val text = view.text
+        if (planning.contains(text.toString()))
+            planning.remove(text.toString())
+        else
+            planning.add(text.toString())
+    }
+
+    fun paymentClicked(view: View) {
+        view as CheckBox
+        val text = view.text
+        if (payment.contains(text.toString()))
+            payment.remove(text.toString())
+        else
+            payment.add(text.toString())
+    }
 }
 
 
 interface ReadSavedRef {
     fun reaRef(ref: DocumentReference?)
+    fun getLocation(ref: DocumentReference?)
 }

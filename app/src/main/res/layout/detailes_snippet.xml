@@ -6,6 +6,7 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:orientation="vertical">
 
         <EditText
@@ -37,6 +38,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="location" />
+
+        <EditText
+            android:id="@+id/city_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="خان يونس"
+            android:hint="city" />
+
+        <EditText
+            android:id="@+id/type_edit_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="مطعم"
+            android:hint="type" />
     </LinearLayout>
 
 

@@ -1,7 +1,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/services"
+        android:id="@+id/the_public"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -14,7 +14,7 @@
             android:layout_margin="8dp"
             android:background="@android:color/darker_gray"
             android:gravity="center"
-            android:text="@string/offerings"
+            android:text="@string/crowd"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
@@ -23,8 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="services"
-            android:text="@string/salad_bar" />
+            android:onClick="thePublicClicked"
+            android:text="@string/locals" />
 
 
         <CheckBox
@@ -32,8 +32,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="services"
-            android:text="@string/healthy_options" />
+            android:onClick="thePublicClicked"
+            android:text="@string/tourists" />
 
 
         <CheckBox
@@ -41,8 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="services"
-            android:text="@string/vegetarian_options" />
+            android:onClick="thePublicClicked"
+            android:text="@string/university_students" />
 
 
         <CheckBox
@@ -50,8 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="services"
-            android:text="@string/discount" />
+            android:onClick="thePublicClicked"
+            android:text="@string/groups" />
 
 
         <CheckBox
@@ -59,33 +59,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="services"
-            android:text="@string/kids_menu" />
+            android:onClick="thePublicClicked"
+            android:text="@string/family_friendly" />
 
 
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_margin="4dp"
-            android:onClick="services"
-            android:text="@string/all_ypu_can_eat" />
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_margin="4dp"
-            android:onClick="services"
-            android:text="@string/late_night_food" />
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_margin="4dp"
-            android:onClick="services"
-            android:text="@string/small_plates" />
 
     </LinearLayout>
 </merge>

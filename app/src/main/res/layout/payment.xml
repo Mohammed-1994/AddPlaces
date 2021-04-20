@@ -1,7 +1,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/accessibility"
+        android:id="@+id/payment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -14,7 +14,7 @@
             android:layout_margin="8dp"
             android:background="@android:color/darker_gray"
             android:gravity="center"
-            android:text="@string/accessibility"
+            android:text="@string/payment"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
@@ -23,8 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="accessibilityClicked"
-            android:text="@string/wheelchair_accessible_seating" />
+            android:onClick="paymentClicked"
+            android:text="@string/cash_only" />
 
 
         <CheckBox
@@ -32,8 +32,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="accessibilityClicked"
-            android:text="@string/wheelchair_accessible_toilet" />
+            android:onClick="paymentClicked"
+            android:text="@string/cheques" />
 
 
         <CheckBox
@@ -41,8 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="accessibilityClicked"
-            android:text="@string/wheelchair_accessible_lift" />
+            android:onClick="paymentClicked"
+            android:text="@string/debit_card" />
 
 
         <CheckBox
@@ -50,8 +50,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="accessibilityClicked"
-            android:text="@string/wheelchair_accessible_car_park" />
+            android:onClick="paymentClicked"
+            android:text="@string/nfc_mobile_payments" />
+
 
 
     </LinearLayout>

@@ -20,6 +20,14 @@
 
             />
 
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
         <Button
             android:id="@+id/upload_image"
             android:layout_width="wrap_content"
@@ -44,12 +52,44 @@
 
         <include
             android:id="@+id/main_features"
-            layout="@layout/main_features" />
+            layout="@layout/highlights" />
 
 
         <include
             android:id="@+id/accessibility"
             layout="@layout/accessibility" />
+
+        <include
+            android:id="@+id/services"
+            layout="@layout/services" />
+
+
+        <include
+            android:id="@+id/eat_options"
+            layout="@layout/eat_options" />
+
+
+        <include
+            android:id="@+id/amenities"
+            layout="@layout/amenities" />
+
+
+        <include
+            android:id="@+id/atmosphere"
+            layout="@layout/atmosphere" />
+
+
+        <include
+            android:id="@+id/the_public"
+            layout="@layout/crowd" />
+
+        <include
+            android:id="@+id/planning"
+            layout="@layout/planning" />
+
+        <include
+            android:id="@+id/payment"
+            layout="@layout/payment" />
 
     </LinearLayout>
 </ScrollView>

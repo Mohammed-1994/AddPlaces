@@ -1,7 +1,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/services"
+        android:id="@+id/main_features"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -14,7 +14,7 @@
             android:layout_margin="8dp"
             android:background="@android:color/darker_gray"
             android:gravity="center"
-            android:text="@string/offerings"
+            android:text="@string/highlights"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
@@ -23,8 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="services"
-            android:text="@string/salad_bar" />
+            android:onClick="mainFeatures"
+            android:text="@string/great_views" />
 
 
         <CheckBox
@@ -32,8 +32,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="services"
-            android:text="@string/healthy_options" />
+            android:onClick="mainFeatures"
+            android:text="@string/sport" />
 
 
         <CheckBox
@@ -41,8 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="services"
-            android:text="@string/vegetarian_options" />
+            android:onClick="mainFeatures"
+            android:text="@string/rooftop_seating" />
 
 
         <CheckBox
@@ -50,8 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="services"
-            android:text="@string/discount" />
+            android:onClick="mainFeatures"
+            android:text="@string/great_dessert" />
 
 
         <CheckBox
@@ -59,8 +59,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="services"
-            android:text="@string/kids_menu" />
+            android:onClick="mainFeatures"
+            android:text="@string/fast_service" />
 
 
         <CheckBox
@@ -68,24 +68,23 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="services"
-            android:text="@string/all_ypu_can_eat" />
+            android:onClick="mainFeatures"
+            android:text="@string/great_coffee" />
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="services"
-            android:text="@string/late_night_food" />
-
+            android:onClick="mainFeatures"
+            android:text="@string/great_drinks" />
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="services"
-            android:text="@string/small_plates" />
+            android:onClick="mainFeatures"
+            android:text="@string/live_music" />
 
     </LinearLayout>
 </merge>

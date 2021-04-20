@@ -1,7 +1,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:id="@+id/main_features"
+        android:id="@+id/atmosphere"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -14,7 +14,7 @@
             android:layout_margin="8dp"
             android:background="@android:color/darker_gray"
             android:gravity="center"
-            android:text="أهم السمات"
+            android:text="@string/atmosphere"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
@@ -23,8 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="mainFeatures"
-            android:text="إطلالات رائعة" />
+            android:onClick="atmosphereClicked"
+            android:text="@string/romantic" />
 
 
         <CheckBox
@@ -32,8 +32,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="mainFeatures"
-            android:text="ألعاب رياضية" />
+            android:onClick="atmosphereClicked"
+            android:text="@string/upmarket" />
 
 
         <CheckBox
@@ -41,8 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="mainFeatures"
-            android:text="أماكن جلوس على السطح" />
+            android:onClick="atmosphereClicked"
+            android:text="@string/casual" />
 
 
         <CheckBox
@@ -50,8 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="mainFeatures"
-            android:text="حلويات رائعة" />
+            android:onClick="atmosphereClicked"
+            android:text="@string/cosy" />
 
 
         <CheckBox
@@ -59,8 +59,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="mainFeatures"
-            android:text="خدمة سريعة" />
+            android:onClick="atmosphereClicked"
+            android:text="@string/lively" />
 
 
         <CheckBox
@@ -68,23 +68,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="mainFeatures"
-            android:text="قهوة رائعة" />
+            android:onClick="atmosphereClicked"
+            android:text="@string/historic" />
+
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_margin="4dp"
-            android:onClick="mainFeatures"
-            android:text="مشروبات رائعة" />
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_margin="4dp"
-            android:onClick="mainFeatures"
-            android:text="موسيقى" />
+            android:onClick="atmosphereClicked"
+            android:text="@string/quiet" />
+
 
     </LinearLayout>
 </merge>

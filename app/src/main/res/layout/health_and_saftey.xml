@@ -14,7 +14,7 @@
             android:layout_margin="8dp"
             android:background="@android:color/darker_gray"
             android:gravity="center"
-            android:text="الصحة والسلامة"
+            android:text="@string/health_and_safety"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
@@ -24,7 +24,7 @@
             android:layout_gravity="start"
             android:onClick="healthAndSafetyClicked"
             android:layout_margin="4dp"
-            android:text="الحجوزات المسبقة مطلوبة" />
+            android:text="@string/reservations_required" />
 
     </LinearLayout>
 </merge>

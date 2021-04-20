@@ -14,7 +14,7 @@
             android:layout_margin="8dp"
             android:background="@android:color/darker_gray"
             android:gravity="center"
-            android:text="خيارات الخدمة"
+            android:text="@string/service_options"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
@@ -24,7 +24,7 @@
             android:layout_gravity="start"
             android:layout_margin="4dp"
             android:onClick="serviceOptionsClicked"
-            android:text="الايصال الى السيارة" />
+            android:text="@string/drive_through" />
 
 
         <CheckBox
@@ -33,7 +33,7 @@
             android:layout_gravity="start"
             android:layout_margin="4dp"
             android:onClick="serviceOptionsClicked"
-            android:text="خدمة التوصيل" />
+            android:text="@string/delivery" />
 
 
         <CheckBox
@@ -42,7 +42,7 @@
             android:layout_gravity="start"
             android:layout_margin="4dp"
             android:onClick="serviceOptionsClicked"
-            android:text="خدمة الطلب أثناء القيادة" />
+            android:text="@string/curbside_pick_up" />
 
 
         <CheckBox
@@ -51,7 +51,7 @@
             android:layout_gravity="start"
             android:layout_margin="4dp"
             android:onClick="serviceOptionsClicked"
-            android:text="طعام سفري" />
+            android:text="@string/takeaway" />
 
 
         <CheckBox
@@ -60,7 +60,7 @@
             android:layout_gravity="start"
             android:layout_margin="4dp"
             android:onClick="serviceOptionsClicked"
-            android:text="الأكل داخل المكان" />
+            android:text="@string/dine_in" />
 
 
         <CheckBox
@@ -69,7 +69,7 @@
             android:layout_gravity="start"
             android:layout_margin="4dp"
             android:onClick="serviceOptionsClicked"
-            android:text="أماكن جلوس في الهواء الطلق" />
+            android:text="@string/outdoor_seating" />
 
     </LinearLayout>
 </merge>
