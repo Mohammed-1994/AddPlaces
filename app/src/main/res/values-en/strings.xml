@@ -73,5 +73,12 @@
     <string name="cheques">cheques</string>
     <string name="debit_card">debit_card</string>
     <string name="nfc_mobile_payments">nfc_mobile_payments</string>
+    <string name="rafah">Rafah</string>
+    <string name="kahan_yunis">Kahan Yunis</string>
+    <string name="central">Central</string>
+    <string name="gaza">Gaza</string>
+    <string name="north">North</string>
+    <string name="restaurant">restaurant</string>
+    <string name="coffee">coffee</string>
 
 </resources>

@@ -1,18 +1,16 @@
 package com.awad.addplaces
 
 import android.Manifest
-import android.R.id
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.CheckBox
+import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -25,14 +23,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 private const val TAG = "MainActivity myTag"
 const val RESULT_IMAGE = 1
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), ReadSavedRef {
+class MainActivity : AppCompatActivity(), UploadCallbacks {
 
 
     @Inject
@@ -52,6 +49,7 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
     private var thePublic = ArrayList<String>()
     private var atmosphere = ArrayList<String>()
     private var planning = ArrayList<String>()
+    private var images: ArrayList<String>? = null
 
     var name: String? = null
     var description: String? = null
@@ -60,6 +58,8 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
     var phone: String? = null
     var city: String? = null
     var type: String? = null
+
+    private var data: Intent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
 
             startActivity(intent)
 
-            binding.progressBar.visibility = View.VISIBLE
+            binding.progressBar.visibility = VISIBLE
 
             val mainInfo = hashMapOf(
                 "name" to name,
@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
                 .add(info)
                 .addOnCompleteListener {
                     if (it.isSuccessful)
-                        reaRef(it.result)
+                        uploadMetaData(it.result)
                     else
                         Log.e(TAG, "onCreate: Error", it.exception)
                 }
@@ -115,6 +115,9 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
         }
 
         binding.uploadImage.setOnClickListener {
+            data = null
+            images = ArrayList()
+            Log.d(TAG, "onCreate: ${images?.size}")
             checkForPermissions()
             val intent = Intent()
             intent.type = "image/*"
@@ -134,39 +137,29 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
         location = binding.details.locationEditText.text.toString()
         address = binding.details.addressEditText.text.toString()
         phone = binding.details.phoneEditText.text.toString()
-        city = binding.details.cityEditText.text.toString()
-        type = binding.details.typeEditText.text.toString()
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.d(TAG, "onActivityResult: ${images?.size}")
         Log.d(TAG, "onActivityResult: ")
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == RESULT_IMAGE && resultCode == RESULT_OK && data != null) {
             Log.d(TAG, "onActivityResult: RESULT_OK")
-            if (data.clipData != null) {
-                val totalItems = data.clipData!!.itemCount
-                Log.d(TAG, "onActivityResult: clip data != null,  size = $totalItems")
-                (0 until totalItems).forEach { i ->
-                    Log.d(TAG, "onActivityResult: foreach")
-                    val imageUri = data.clipData!!.getItemAt(i).uri
-                    uploadImage(imageUri)
+            this.data = data
 
-                }
-
-            }
-            if (data.data != null && data.clipData == null) {
-                Log.d(TAG, "onActivityResult: data.data != null")
-                uploadImage(data.data!!)
-            }
         }
     }
 
-    private fun uploadImage(imageUri: Uri) {
+    private fun uploadImage(imageUri: Uri, ref: DocumentReference?) {
+        binding.progressCircular.visibility = VISIBLE
+        Log.d(TAG, "uploadImage: ${images?.size}")
+        val imageRef =
+            storageRef.child(city!!).child(type!!).child(ref?.id!!)
+                .child("images/${imageUri.lastPathSegment}")
 
-        val riversRef = storageRef.child("images/${imageUri.lastPathSegment}")
-
-        val uploadTask = riversRef.putFile(imageUri)
+        val uploadTask = imageRef.putFile(imageUri)
 
         uploadTask.addOnFailureListener {
             // Handle unsuccessful uploads
@@ -176,6 +169,19 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
             // ...
             Log.d(TAG, "onActivityResult: success")
+        }.addOnProgressListener {
+            val total = it.totalByteCount.toDouble()
+            val transferred = it.bytesTransferred.toDouble()
+            val progress = (transferred / total) * 100
+            Log.d(
+                TAG,
+                "uploadImage: transferred $transferred, total = $total, progress = $progress"
+            )
+
+
+
+            binding.progressCircular.progress = (progress.toInt())
+
         }
         val urlTask = uploadTask.continueWithTask { task ->
             if (!task.isSuccessful) {
@@ -183,11 +189,19 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
                     throw it
                 }
             }
-            riversRef.downloadUrl
+            imageRef.downloadUrl
         }.addOnCompleteListener { task ->
+            binding.progressCircular.visibility = GONE
+
             if (task.isSuccessful) {
                 val downloadUri = task.result
                 Log.d(TAG, "onActivityResult: uri = $downloadUri")
+                Log.d(TAG, "uploadImage: got uri :  ${images?.size}")
+
+                images?.add(downloadUri.toString())
+                uploadImageUris(ref)
+
+
             } else {
                 // Handle failures
                 // ...
@@ -226,7 +240,20 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
 
     }
 
-    override fun reaRef(ref: DocumentReference?) {
+    override fun uploadImageUris(ref: DocumentReference?) {
+//        val images = hashMapOf(
+//            "images" to images
+//        )
+
+        Log.d(TAG, "uploadImageUris:  ${images?.size} ")
+        ref?.update("images", images)
+            ?.addOnCompleteListener {
+                if (!it.isSuccessful)
+                    Log.e(TAG, "uploadImageUris: Error", it.exception)
+            }
+    }
+
+    override fun uploadMetaData(ref: DocumentReference?) {
 
         val metadata = hashMapOf(
             "city" to city,
@@ -240,28 +267,27 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
                 if (!it.isSuccessful)
                     Log.e(TAG, "reaRef: Error", it.exception)
                 else
-                    getLocation(ref)
+                    uploadImage(ref)
             }
     }
 
-    override fun getLocation(ref: DocumentReference?) {
-        ref!!.get()
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val mainInfo: HashMap<*, *> = it.result.get("main info") as HashMap<*, *>
+    override fun uploadImage(ref: DocumentReference?) {
 
-                    val locationGeoPoint = mainInfo["location"] as GeoPoint
-                    val intent = Intent(this, MapsActivity::class.java)
-                    intent.putExtra("lat", locationGeoPoint.latitude)
-                    intent.putExtra("lon", locationGeoPoint.longitude)
-
-                    startActivity(intent)
-                } else
-                    Log.e(TAG, "getLocation: Error", it.exception)
+        if (data?.clipData != null) {
+            val totalItems = data?.clipData!!.itemCount
+            Log.d(TAG, "onActivityResult: clip data != null,  size = $totalItems")
+            (0 until totalItems).forEach { i ->
+                Log.d(TAG, "onActivityResult: foreach")
+                val imageUri = data?.clipData!!.getItemAt(i).uri
+                uploadImage(imageUri, ref)
 
             }
-    }
 
+        } else if (data != null && data?.clipData == null) {
+            Log.d(TAG, "onActivityResult: data.data != null")
+            uploadImage(data?.data!!, ref)
+        }
+    }
 
     private fun checkForPermissions() {
         val permissions =
@@ -322,9 +348,7 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
             eatOptions.add(text.toString())
 
 
-
     }
-
 
 
     fun amenitiesClicked(view: View) {
@@ -371,10 +395,21 @@ class MainActivity : AppCompatActivity(), ReadSavedRef {
         else
             payment.add(text.toString())
     }
+
+    fun onCitiesRadioClicked(view: View) {
+        view as RadioButton
+        city = view.text.toString()
+    }
+
+    fun onTypesRadioClicked(view: View) {
+        view as RadioButton
+        type = view.text.toString()
+    }
 }
 
 
-interface ReadSavedRef {
-    fun reaRef(ref: DocumentReference?)
-    fun getLocation(ref: DocumentReference?)
+interface UploadCallbacks {
+    fun uploadMetaData(ref: DocumentReference?)
+    fun uploadImage(ref: DocumentReference?)
+    fun uploadImageUris(ref: DocumentReference?)
 }

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="12dp"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -23,10 +24,18 @@
 
         <ProgressBar
             android:id="@+id/progress_bar"
-            android:visibility="gone"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_circular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
+
 
         <Button
             android:id="@+id/upload_image"
@@ -38,9 +47,18 @@
 
             />
 
+
         <include
             android:id="@+id/details"
             layout="@layout/detailes_snippet" />
+
+        <include
+            android:id="@+id/types_radio_group"
+            layout="@layout/types_radio_group" />
+
+        <include
+            android:id="@+id/radio_group"
+            layout="@layout/cities_radio_group" />
 
         <include
             android:id="@+id/service_options"

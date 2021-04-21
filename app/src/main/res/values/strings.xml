@@ -71,4 +71,11 @@
     <string name="cheques">الشيكات</string>
     <string name="debit_card">بطاقة السحب الآلي</string>
     <string name="nfc_mobile_payments">الدفع عن طريق NFC</string>
+    <string name="north">الشمال</string>
+    <string name="rafah">رفح</string>
+    <string name="kahan_yunis">خان يونس</string>
+    <string name="central">الوسطى</string>
+    <string name="gaza">غزة</string>
+    <string name="restaurant">مطعم</string>
+    <string name="coffee">كفي شوب</string>
 </resources>

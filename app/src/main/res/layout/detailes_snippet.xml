@@ -11,47 +11,35 @@
 
         <EditText
             android:id="@+id/name_edit_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="name" />
 
         <EditText
             android:id="@+id/description_edit_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="description" />
 
         <EditText
             android:id="@+id/address_edit_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="address" />
 
         <EditText
             android:id="@+id/phone_edit_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="phone"
             android:hint="phone" />
 
         <EditText
             android:id="@+id/location_edit_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="location" />
 
-        <EditText
-            android:id="@+id/city_edit_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="خان يونس"
-            android:hint="city" />
-
-        <EditText
-            android:id="@+id/type_edit_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="مطعم"
-            android:hint="type" />
     </LinearLayout>
 
 
