@@ -3,6 +3,7 @@ package com.awad.addplaces
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.awad.addplaces.util.LocationModel
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -47,9 +48,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(lat, lon)
 
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Gaza"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        showMarkers()
+    }
+
+    private fun showMarkers() {
+
+        val intent = intent
+        val locations = intent.getParcelableArrayListExtra<LocationModel>("locations")
+
+        for (location in locations!!) {
+            val lat = location.lat
+            val lng = location.lng
+            val sydney = LatLng(lat, lng)
+
+            mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Gaza"))
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+
+
+        }
     }
 }

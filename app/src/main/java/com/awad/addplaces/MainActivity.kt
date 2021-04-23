@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -15,9 +17,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.awad.addplaces.databinding.ActivityMainBinding
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.GeoPoint
+import com.awad.addplaces.util.LocationModel
+import com.firebase.geofire.GeoFireUtils
+import com.firebase.geofire.GeoLocation
+import com.firebase.geofire.GeoQueryBounds
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
+import com.google.firebase.firestore.*
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -50,6 +56,8 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
     private var atmosphere = ArrayList<String>()
     private var planning = ArrayList<String>()
     private var images: ArrayList<String>? = null
+    private var info: HashMap<String, *>? = null
+    private var locationHashMap: HashMap<String, Any>? = null
 
     var name: String? = null
     var description: String? = null
@@ -66,70 +74,76 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.saveButton.setOnClickListener {
-            getInputs()
-            val lat = location?.substring(0, location!!.indexOf(','))!!
-            val lon = location?.substring(location!!.indexOf(',') + 1, location!!.length - 1)!!
+    }
 
-            val geoPoint = GeoPoint(lat.toDouble(), lon.toDouble())
+    private fun queryLocations() {
+        val center = GeoLocation(31.2593, 34.2695)
+        val radius = 50 * 10000
+        val bounds: List<GeoQueryBounds> = GeoFireUtils.getGeoHashQueryBounds(
+            center,
+            radius.toDouble()
+        )
+        Log.d(TAG, "queryLocations: bounds size ${bounds.size}")
+        val tasks: MutableList<Task<QuerySnapshot>> = ArrayList()
+        for (b in bounds) {
 
-            startActivity(intent)
+            val q: Query = fireStore.collectionGroup("meta data")
+//
+//                .whereEqualTo("city", city)
+                .whereEqualTo("type", type)
 
-            binding.progressBar.visibility = VISIBLE
+                .orderBy("geohash")
+                .startAt(b.startHash)
+                .endAt(b.endHash)
 
-            val mainInfo = hashMapOf(
-                "name" to name,
-                "description" to description,
-                "location" to geoPoint,
-                "address" to address,
-                "phone" to phone,
-                "city" to city,
-                "type" to type,
-            )
-            val info = hashMapOf(
 
-                "main info" to mainInfo,
-                "service options" to serviceOptions,
-                "main features" to mainFeatures,
-                "accessibility" to accessibility,
-                "eat options" to eatOptions,
-                "services" to services,
-                "payment" to payment,
-                "amenities" to amenities,
-                "public" to thePublic,
-                "atmosphere" to atmosphere,
-                "planning" to planning,
-                "healthAndSafety" to healthAndSafety
+            tasks.add(q.get())
+        }
+        Log.d(TAG, "queryLocations: ${tasks.size}")
+        // Collect all the query results together into a single list
+        Tasks.whenAllComplete(tasks)
+            .addOnCompleteListener {
+                val matchingDocs: MutableList<LocationModel> = ArrayList()
+                for (task in tasks) {
+                    val snap = task.result
+                    for (doc in snap.documents) {
+                        val location = doc.toObject(LocationModel::class.java)
+                        val lat = doc.get("lat")!! as Double
+                        val lng = doc.get("lng")!! as Double
 
-            )
-
-            fireStore.collection("cities").document(city!!).collection(type!!)
-                .add(info)
-                .addOnCompleteListener {
-                    if (it.isSuccessful)
-                        uploadMetaData(it.result)
-                    else
-                        Log.e(TAG, "onCreate: Error", it.exception)
+                        // We have to filter out a few false positives due to GeoHash
+                        // accuracy, but most will match
+                        val docLocation = GeoLocation(lat, lng)
+                        val distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center)
+                        if (distanceInM <= radius) {
+                            matchingDocs.add(location!!)
+                        }
+                    }
                 }
 
-        }
+                // matchingDocs contains the results
+                // ...
+                Log.d(TAG, "queryLocations: size ${matchingDocs.size}")
+                Log.d(TAG, "queryLocations: size $matchingDocs")
+                val intent = Intent(this, MapsActivity::class.java)
+                intent.putParcelableArrayListExtra("locations", ArrayList(matchingDocs))
+                startActivity(intent)
 
-        binding.uploadImage.setOnClickListener {
-            data = null
-            images = ArrayList()
-            Log.d(TAG, "onCreate: ${images?.size}")
-            checkForPermissions()
-            val intent = Intent()
-            intent.type = "image/*"
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-            intent.action = Intent.ACTION_GET_CONTENT
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), RESULT_IMAGE)
-
-        }
-
+            }
 
     }
 
+    private fun saveLocation() {
+
+        fireStore.collection("cities").document(city!!).collection(type!!)
+            .add(info!!)
+            .addOnCompleteListener {
+                if (it.isSuccessful)
+                    uploadMetaData(it.result)
+                else
+                    Log.e(TAG, "onCreate: Error", it.exception)
+            }
+    }
 
     private fun getInputs() {
         name = binding.details.nameEditText.text.toString()
@@ -137,12 +151,56 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
         location = binding.details.locationEditText.text.toString()
         address = binding.details.addressEditText.text.toString()
         phone = binding.details.phoneEditText.text.toString()
+        val lat = location?.substring(0, location!!.indexOf(','))!!
+        val lon = location?.substring(location!!.indexOf(',') + 1, location!!.length - 1)!!
 
+        val geoPoint = GeoPoint(lat.toDouble(), lon.toDouble())
+
+        startActivity(intent)
+
+        binding.progressBar.visibility = VISIBLE
+
+        val mainInfo = hashMapOf(
+            "name" to name,
+            "description" to description,
+            "location" to geoPoint,
+            "address" to address,
+            "phone" to phone,
+            "city" to city,
+            "type" to type,
+        )
+        info = hashMapOf(
+
+            "main info" to mainInfo,
+            "service options" to serviceOptions,
+            "main features" to mainFeatures,
+            "accessibility" to accessibility,
+            "eat options" to eatOptions,
+            "services" to services,
+            "payment" to payment,
+            "amenities" to amenities,
+            "public" to thePublic,
+            "atmosphere" to atmosphere,
+            "planning" to planning,
+            "healthAndSafety" to healthAndSafety
+
+        )
+    }
+
+    override fun saveLocation(ref: DocumentReference?) {
+        val location = hashMapOf(
+            "ref" to ref,
+            "geoLocation" to locationHashMap
+
+        )
+        fireStore.collection("locations").add(location)
+            .addOnCompleteListener {
+                if (!it.isSuccessful)
+                    Log.e(TAG, "saveLocation: Error", it.exception)
+            }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.d(TAG, "onActivityResult: ${images?.size}")
-        Log.d(TAG, "onActivityResult: ")
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == RESULT_IMAGE && resultCode == RESULT_OK && data != null) {
@@ -173,13 +231,6 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
             val total = it.totalByteCount.toDouble()
             val transferred = it.bytesTransferred.toDouble()
             val progress = (transferred / total) * 100
-            Log.d(
-                TAG,
-                "uploadImage: transferred $transferred, total = $total, progress = $progress"
-            )
-
-
-
             binding.progressCircular.progress = (progress.toInt())
 
         }
@@ -254,10 +305,22 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
     }
 
     override fun uploadMetaData(ref: DocumentReference?) {
+        val lat = location?.substring(0, location!!.indexOf(','))!!
+        val lng = location?.substring(location!!.indexOf(',') + 1, location!!.length - 1)!!
+
+        val hash =
+            GeoFireUtils.getGeoHashForLocation(GeoLocation(lat.toDouble(), lng.toDouble()))
+//31.25933185479116, 34.26954593545905
+
 
         val metadata = hashMapOf(
             "city" to city,
-            "type" to type
+            "type" to type,
+            "geohash" to hash,
+            "lat" to lat.toDouble(),
+            "lng" to lng.toDouble(),
+            "refId" to ref?.id
+
         )
 
         ref!!.collection("meta data")
@@ -269,6 +332,7 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
                 else
                     uploadImage(ref)
             }
+
     }
 
     override fun uploadImage(ref: DocumentReference?) {
@@ -405,6 +469,40 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
         view as RadioButton
         type = view.text.toString()
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.save_menu_item -> {
+                getInputs()
+//                saveLocation()
+                queryLocations()
+                true
+            }
+            R.id.upload_image_menu_item -> {
+                data = null
+                images = null
+                images = ArrayList()
+                Log.d(TAG, "onCreate: ${images?.size}")
+                checkForPermissions()
+                val intent = Intent()
+                intent.type = "image/*"
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                intent.action = Intent.ACTION_GET_CONTENT
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), RESULT_IMAGE)
+
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+
+        }
+
+    }
 }
 
 
@@ -412,4 +510,7 @@ interface UploadCallbacks {
     fun uploadMetaData(ref: DocumentReference?)
     fun uploadImage(ref: DocumentReference?)
     fun uploadImageUris(ref: DocumentReference?)
+
+    // tests for saving locations in separated node
+    fun saveLocation(ref: DocumentReference?)
 }
