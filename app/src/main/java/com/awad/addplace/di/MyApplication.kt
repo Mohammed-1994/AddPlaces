@@ -1,9 +1,8 @@
-package com.awad.addplaces.di
+package com.awad.addplace.di
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 
 @HiltAndroidApp
-class MyApplication : Application(){
-}
+class MyApplication : Application()

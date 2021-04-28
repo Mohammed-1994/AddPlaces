@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Add Places</string>
+    <string name="app_name">Add Place</string>
     <string name="title_activity_maps">Map</string>
     <string name="service_options">خيارات الخدمة</string>
     <string name="drive_through">الايصال الى السيارة</string>

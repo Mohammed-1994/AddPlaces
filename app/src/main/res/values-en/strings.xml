@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Add Places</string>
+    <string name="app_name">Add Place</string>
     <string name="title_activity_maps">Map</string>
     <string name="service_options">service_options</string>
     <string name="drive_through">drive_through</string>

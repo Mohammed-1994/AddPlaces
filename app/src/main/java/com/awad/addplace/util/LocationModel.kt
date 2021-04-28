@@ -1,4 +1,4 @@
-package com.awad.addplaces.util
+package com.awad.addplace.util
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

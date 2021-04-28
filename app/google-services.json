@@ -1,78 +1,41 @@
 {
   "project_info": {
-    "project_number": "678313531910",
-    "project_id": "gaza-places",
-    "storage_bucket": "gaza-places.appspot.com"
+    "project_number": "913747792406",
+    "project_id": "add-place-d0852",
+    "storage_bucket": "add-place-d0852.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:678313531910:android:ce80626a309b6ab0790187",
+        "mobilesdk_app_id": "1:913747792406:android:15f18afc0538fe7ba1db37",
         "android_client_info": {
-          "package_name": "com.awad.addplaces"
+          "package_name": "com.awad.addplace"
         }
       },
       "oauth_client": [
         {
-          "client_id": "678313531910-pahfkhd5gol2i5p661a13nuet7hgtnrp.apps.googleusercontent.com",
+          "client_id": "913747792406-736luj71c7ehokgc5roal0odumumh8bn.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.awad.addplaces",
-            "certificate_hash": "07436397f482f641ace742e0a29bb3903d151e83"
+            "package_name": "com.awad.addplace",
+            "certificate_hash": "fbb3d01a1e0c8a75efe6cb35e09e7a2401290e66"
           }
         },
         {
-          "client_id": "678313531910-noso40dql9c42s66g9p173t54uec4sls.apps.googleusercontent.com",
+          "client_id": "913747792406-l9ft15bsoiekmh0t2vmoau88j4gn18vt.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAya77TtuXuABtPks5otDU8tsiBmjSKM7U"
+          "current_key": "AIzaSyCe9kbyl1l3nCJNxUWl7jYPXY6gSjeHetw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "678313531910-noso40dql9c42s66g9p173t54uec4sls.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:678313531910:android:3a78561722b7573d790187",
-        "android_client_info": {
-          "package_name": "com.awad.gazaplaces"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "678313531910-5i7o99mfmimicdu3bsvmha9plac6u9l0.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.awad.gazaplaces",
-            "certificate_hash": "07436397f482f641ace742e0a29bb3903d151e83"
-          }
-        },
-        {
-          "client_id": "678313531910-noso40dql9c42s66g9p173t54uec4sls.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAya77TtuXuABtPks5otDU8tsiBmjSKM7U"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "678313531910-noso40dql9c42s66g9p173t54uec4sls.apps.googleusercontent.com",
+              "client_id": "913747792406-l9ft15bsoiekmh0t2vmoau88j4gn18vt.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -1,4 +1,4 @@
-package com.awad.addplaces
+package com.awad.addplace
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

@@ -1,4 +1,4 @@
-package com.awad.addplaces
+package com.awad.addplace
 
 import android.Manifest
 import android.content.Intent
@@ -16,8 +16,8 @@ import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.awad.addplaces.databinding.ActivityMainBinding
-import com.awad.addplaces.util.LocationModel
+import com.awad.addplace.databinding.ActivityMainBinding
+import com.awad.addplace.util.LocationModel
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQueryBounds
@@ -134,18 +134,24 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
     }
 
     private fun saveLocation() {
-
+        Log.d(TAG, "saveLocation: ")
         fireStore.collection("cities").document(city!!).collection(type!!)
             .add(info!!)
+            .addOnFailureListener{
+                Log.e(TAG, "saveLocation: Error", it)
+            }
             .addOnCompleteListener {
                 if (it.isSuccessful)
                     uploadMetaData(it.result)
-                else
+                else {
+                    binding.progressBar.visibility = GONE
                     Log.e(TAG, "onCreate: Error", it.exception)
+                }
             }
     }
 
     private fun getInputs() {
+        Log.d(TAG, "getInputs: ")
         name = binding.details.nameEditText.text.toString()
         description = binding.details.descriptionEditText.text.toString()
         location = binding.details.locationEditText.text.toString()
@@ -477,11 +483,12 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Log.d(TAG, "onOptionsItemSelected: ")
         return when (item.itemId) {
             R.id.save_menu_item -> {
                 getInputs()
-//                saveLocation()
-                queryLocations()
+                saveLocation()
+//                queryLocations()
                 true
             }
             R.id.upload_image_menu_item -> {

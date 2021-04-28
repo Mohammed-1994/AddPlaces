@@ -1,4 +1,4 @@
-package com.awad.addplaces.di
+package com.awad.addplace.di
 
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module

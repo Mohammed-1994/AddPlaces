@@ -1,6 +1,4 @@
-package com.awad.addplaces.util;
-
-import android.view.View;
+package com.awad.addplace.util;
 
 import java.math.BigDecimal;
 

@@ -1,4 +1,4 @@
-package com.awad.addplaces
+package com.awad.addplace
 
 import org.junit.Test
 

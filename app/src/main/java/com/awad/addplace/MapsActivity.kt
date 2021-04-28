@@ -1,9 +1,9 @@
-package com.awad.addplaces
+package com.awad.addplace
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.awad.addplaces.util.LocationModel
+import com.awad.addplace.util.LocationModel
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
