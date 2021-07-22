@@ -22,6 +22,7 @@
     <string name="accessibility">إمكانية الوصول</string>
     <string name="wheelchair_accessible_seating">أماكن صالحة للكراسي المتحركة</string>
     <string name="wheelchair_accessible_toilet">دورة مياة صالحة للكراسي المتحركة</string>
+    <string name="wheelchair_accessible_entry">مدخل صالح للكراسي المتحركة</string>
     <string name="wheelchair_accessible_lift">مصعد صالح للكراسي المتحركة</string>
     <string name="wheelchair_accessible_car_park">موقف سيارات صالح للكراسي المتحركة</string>
     <string name="offerings">الخدمات المقدمة</string>
@@ -29,7 +30,7 @@
     <string name="healthy_options">أكلات صحية</string>
     <string name="vegetarian_options">خيارات نباتية</string>
     <string name="discount">عروض تخفيضات</string>
-    <string name="kids_menu">ثائمة طعام للأطفال</string>
+    <string name="kids_menu">قائمة طعام للأطفال</string>
     <string name="all_ypu_can_eat">كل ما يمكنك أكله</string>
     <string name="late_night_food">مأكولات في ساعات متأخرة من الليل</string>
     <string name="small_plates">وجبات خفيفة</string>
@@ -58,7 +59,7 @@
     <string name="locals">سكان محليون</string>
     <string name="tourists">سياح</string>
     <string name="university_students">طلاب جامعة</string>
-    <string name="groups">محموعات</string>
+    <string name="groups">مجموعات</string>
     <string name="family_friendly">مناسب للعائلات</string>
     <string name="planning">التخطيط</string>
     <string name="brunch_reservations_recommended">حجوزات الافطار المتأخر</string>
@@ -77,5 +78,8 @@
     <string name="central">الوسطى</string>
     <string name="gaza">غزة</string>
     <string name="restaurant">مطعم</string>
-    <string name="coffee">كفي شوب</string>
+    <string name="coffee_shop">كفي شوب</string>
+    <string name="ice_cream">مرطبات</string>
+    <string name="coffee">قهوة</string>
+    <string name="sweets">حلويات</string>
 </resources>

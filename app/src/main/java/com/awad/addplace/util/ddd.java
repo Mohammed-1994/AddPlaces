@@ -1,5 +1,7 @@
 package com.awad.addplace.util;
 
+import com.awad.addplace.MainActivity;
+
 import java.math.BigDecimal;
 
 public class ddd {
@@ -14,6 +16,8 @@ public class ddd {
         double longitude = Double.parseDouble(lon);
     }
     private static String arabicToDecimal(String number) {
+
+
         char[] chars = new char[number.length()];
         for(int i=0;i<number.length();i++) {
             char ch = number.charAt(i);

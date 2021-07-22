@@ -80,5 +80,9 @@
     <string name="north">North</string>
     <string name="restaurant">restaurant</string>
     <string name="coffee">coffee</string>
+    <string name="wheelchair_accessible_entry">wheelchair_accessible_entry</string>
+    <string name="coffee_shop">coffee_shop</string>
+    <string name="ice_cream">ice_cream</string>
+    <string name="sweets">sweets</string>
 
 </resources>

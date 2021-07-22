@@ -1,7 +1,7 @@
 package com.awad.addplace.util
 
 import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class LocationModel(

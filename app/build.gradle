@@ -77,20 +77,20 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
     //firebase analytics
-    implementation 'com.google.firebase:firebase-analytics:18.0.3'
+    implementation 'com.google.firebase:firebase-analytics:19.0.0'
 
     //firebase database
-    implementation 'com.google.firebase:firebase-database:19.7.0'
-    implementation 'com.google.firebase:firebase-firestore:22.1.2'
+    implementation 'com.google.firebase:firebase-database:20.0.0'
+    implementation 'com.google.firebase:firebase-firestore:23.0.1'
 
     //firebase storage
-    implementation 'com.google.firebase:firebase-storage:19.2.2'
+    implementation 'com.google.firebase:firebase-storage:20.0.0'
 
     //location
     implementation 'com.google.android.gms:play-services-location:18.0.0'
 
     //maps
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
 
     implementation 'com.firebase:geofire-android-common:3.1.0'
 

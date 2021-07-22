@@ -15,4 +15,10 @@
         android:icon="@drawable/ic_baseline_cloud_upload_24"
         android:title="upload" />
 
+    <item
+        android:id="@+id/clear_inputs_menu_item"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_baseline_delete_24"
+        android:title="clear" />
+
 </menu>

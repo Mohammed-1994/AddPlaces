@@ -3,8 +3,10 @@ package com.awad.addplace
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -13,6 +15,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.CheckBox
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -26,9 +29,8 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.*
 import com.google.firebase.storage.FirebaseStorage
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import java.io.ByteArrayOutputStream
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 
 private const val TAG = "MainActivity myTag"
@@ -36,6 +38,9 @@ const val RESULT_IMAGE = 1
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), UploadCallbacks {
+
+
+    private var count = 0
 
 
     @Inject
@@ -66,6 +71,7 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
     var phone: String? = null
     var city: String? = null
     var type: String? = null
+    var website: String? = null
 
     private var data: Intent? = null
 
@@ -73,6 +79,7 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
     }
 
@@ -87,7 +94,7 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
         val tasks: MutableList<Task<QuerySnapshot>> = ArrayList()
         for (b in bounds) {
 
-            val q: Query = fireStore.collectionGroup("meta data")
+            val q = fireStore.collectionGroup("meta data")
 //
 //                .whereEqualTo("city", city)
                 .whereEqualTo("type", type)
@@ -133,18 +140,96 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
 
     }
 
+    private fun testQueries() {
+
+        val q = fireStore.collectionGroup("meta data")
+//
+//                .whereEqualTo("city", city)
+            .whereEqualTo("type", type)
+//
+
+        q.get()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    Log.d(TAG, "testQueries: size = ${it.result.documents.size}")
+                    for (d in it.result.documents) {
+                        Log.d(TAG, "testQueries ::: type= ${d["type"]} ::: city= ${d["city"]}")
+                    }
+                } else
+                    Log.e(TAG, "testQueries: Error", it.exception)
+            }
+
+
+    }
+
+    //  save images to meta data
+    private fun getDocumentRef() {
+        fireStore.collection("cities").document(city!!).collection(type!!)
+            .get().addOnCompleteListener {
+                if (it.isSuccessful) {
+
+                    getMetaDataID(it.result.documents)
+                } else
+                    Log.e(TAG, "getDocumentRef: Error", it.exception)
+            }
+
+
+    }
+
+    private fun getMetaDataID(documents: List<DocumentSnapshot>) {
+        for (d in documents) {
+            var imagesList = ArrayList<String>()
+            if (d["images"] != null)
+                imagesList = d["images"] as ArrayList<String>
+
+            d.reference.collection("meta_data").get()
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+
+                        val ref = it.result.documents[0].reference
+                        uploadImagesListToMetaData(imagesList, ref)
+                    } else
+                        Log.e(TAG, "getMetaDataID: Error", it.exception)
+                }
+        }
+    }
+
+    private fun uploadImagesListToMetaData(
+        imagesList: java.util.ArrayList<String>,
+        ref: DocumentReference
+    ) {
+
+        ref.update("images", imagesList)
+            .addOnCompleteListener {
+                if (it.isSuccessful)
+                    Toast.makeText(this, "uploaded", Toast.LENGTH_SHORT).show()
+                else
+                    Log.e(TAG, "uploadImagesListToMetaData: Error", it.exception)
+            }
+    }
+
+
+    private fun getPlacesCount() {
+        fireStore.collection("cities").document(city!!).collection(type!!)
+            .get()
+            .addOnCompleteListener {
+                if (it.isSuccessful)
+                    count = it.result.documents.size + 1
+                getInputs()
+            }
+    }
+
     private fun saveLocation() {
-        Log.d(TAG, "saveLocation: ")
         fireStore.collection("cities").document(city!!).collection(type!!)
             .add(info!!)
-            .addOnFailureListener{
+            .addOnFailureListener {
                 Log.e(TAG, "saveLocation: Error", it)
             }
             .addOnCompleteListener {
+                binding.progressBar.visibility = GONE
                 if (it.isSuccessful)
                     uploadMetaData(it.result)
                 else {
-                    binding.progressBar.visibility = GONE
                     Log.e(TAG, "onCreate: Error", it.exception)
                 }
             }
@@ -157,6 +242,7 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
         location = binding.details.locationEditText.text.toString()
         address = binding.details.addressEditText.text.toString()
         phone = binding.details.phoneEditText.text.toString()
+        website = binding.details.websiteEditText.text.toString()
         val lat = location?.substring(0, location!!.indexOf(','))!!
         val lon = location?.substring(location!!.indexOf(',') + 1, location!!.length - 1)!!
 
@@ -174,23 +260,30 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
             "phone" to phone,
             "city" to city,
             "type" to type,
+            "website" to website
         )
+        images = ArrayList()
         info = hashMapOf(
 
-            "main info" to mainInfo,
-            "service options" to serviceOptions,
-            "main features" to mainFeatures,
+            "place_number" to count,
+            "main_info" to mainInfo,
+            "service_options" to serviceOptions,
+            "main_features" to mainFeatures,
             "accessibility" to accessibility,
-            "eat options" to eatOptions,
+            "eat_options" to eatOptions,
             "services" to services,
             "payment" to payment,
             "amenities" to amenities,
             "public" to thePublic,
             "atmosphere" to atmosphere,
             "planning" to planning,
-            "healthAndSafety" to healthAndSafety
+            "health_and_safety" to healthAndSafety,
+            "view_count" to 0,
 
-        )
+
+            )
+
+        saveLocation()
     }
 
     override fun saveLocation(ref: DocumentReference?) {
@@ -210,7 +303,6 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == RESULT_IMAGE && resultCode == RESULT_OK && data != null) {
-            Log.d(TAG, "onActivityResult: RESULT_OK")
             this.data = data
 
         }
@@ -218,21 +310,24 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
 
     private fun uploadImage(imageUri: Uri, ref: DocumentReference?) {
         binding.progressCircular.visibility = VISIBLE
-        Log.d(TAG, "uploadImage: ${images?.size}")
+        val bmp = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+        val baos = ByteArrayOutputStream()
+        bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos)
+
+
+        val data: ByteArray = baos.toByteArray()
         val imageRef =
-            storageRef.child(city!!).child(type!!).child(ref?.id!!)
+            storageRef.child(city!!).child(type!!).child(ref?.id!!).child(name!!)
                 .child("images/${imageUri.lastPathSegment}")
 
-        val uploadTask = imageRef.putFile(imageUri)
+        val uploadTask = imageRef.putBytes(data)
 
         uploadTask.addOnFailureListener {
             // Handle unsuccessful uploads
-            Log.e(TAG, "onActivityResult: Error", it)
 
         }.addOnSuccessListener {
             // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
             // ...
-            Log.d(TAG, "onActivityResult: success")
         }.addOnProgressListener {
             val total = it.totalByteCount.toDouble()
             val transferred = it.bytesTransferred.toDouble()
@@ -252,16 +347,10 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
 
             if (task.isSuccessful) {
                 val downloadUri = task.result
-                Log.d(TAG, "onActivityResult: uri = $downloadUri")
-                Log.d(TAG, "uploadImage: got uri :  ${images?.size}")
-
                 images?.add(downloadUri.toString())
                 uploadImageUris(ref)
 
 
-            } else {
-                // Handle failures
-                // ...
             }
         }
     }
@@ -298,15 +387,12 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
     }
 
     override fun uploadImageUris(ref: DocumentReference?) {
-//        val images = hashMapOf(
-//            "images" to images
-//        )
 
-        Log.d(TAG, "uploadImageUris:  ${images?.size} ")
+
         ref?.update("images", images)
             ?.addOnCompleteListener {
-                if (!it.isSuccessful)
-                    Log.e(TAG, "uploadImageUris: Error", it.exception)
+                if (it.isSuccessful)
+                    Toast.makeText(this, "Done!", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -316,45 +402,56 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
 
         val hash =
             GeoFireUtils.getGeoHashForLocation(GeoLocation(lat.toDouble(), lng.toDouble()))
-//31.25933185479116, 34.26954593545905
-
+        val geoPoint = GeoPoint(lat.toDouble(), lng.toDouble())
 
         val metadata = hashMapOf(
             "city" to city,
+            "name" to name,
+            "address" to address,
             "type" to type,
-            "geohash" to hash,
+            "geo_hash" to hash,
             "lat" to lat.toDouble(),
             "lng" to lng.toDouble(),
-            "refId" to ref?.id
+            "location" to geoPoint,
+            "ref_id" to ref?.id
 
         )
 
-        ref!!.collection("meta data")
+        ref!!.collection("meta_data")
             .add(metadata)
             .addOnCompleteListener {
                 binding.progressBar.visibility = GONE
                 if (!it.isSuccessful)
-                    Log.e(TAG, "reaRef: Error", it.exception)
-                else
+                else {
                     uploadImage(ref)
+
+                }
+
             }
 
+    }
+
+    private fun clearFields() {
+
+        binding.details.addressEditText.setText("")
+        binding.details.phoneEditText.setText("")
+        binding.details.websiteEditText.setText("")
+        binding.details.locationEditText.setText("")
+        binding.details.nameEditText.setText("")
+        binding.details.descriptionEditText.setText("")
     }
 
     override fun uploadImage(ref: DocumentReference?) {
 
         if (data?.clipData != null) {
             val totalItems = data?.clipData!!.itemCount
-            Log.d(TAG, "onActivityResult: clip data != null,  size = $totalItems")
             (0 until totalItems).forEach { i ->
-                Log.d(TAG, "onActivityResult: foreach")
                 val imageUri = data?.clipData!!.getItemAt(i).uri
                 uploadImage(imageUri, ref)
 
             }
 
         } else if (data != null && data?.clipData == null) {
-            Log.d(TAG, "onActivityResult: data.data != null")
             uploadImage(data?.data!!, ref)
         }
     }
@@ -486,9 +583,7 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
         Log.d(TAG, "onOptionsItemSelected: ")
         return when (item.itemId) {
             R.id.save_menu_item -> {
-                getInputs()
-                saveLocation()
-//                queryLocations()
+                getPlacesCount()
                 true
             }
             R.id.upload_image_menu_item -> {
@@ -505,6 +600,11 @@ class MainActivity : AppCompatActivity(), UploadCallbacks {
 
                 true
             }
+            R.id.clear_inputs_menu_item -> {
+                clearFields()
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
 
         }

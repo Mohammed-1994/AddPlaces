@@ -12,7 +12,24 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/coffee_shop"
+            android:onClick="onTypesRadioClicked"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ice_cream"
+            android:onClick="onTypesRadioClicked"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/coffee"
+            android:onClick="onTypesRadioClicked"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sweets"
             android:onClick="onTypesRadioClicked"/>
 
     </RadioGroup>
